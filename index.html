@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Зміни — трекер офіціанта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDF0F7;--sf:#fff;--ink:#121A33;--mut:#6A7493;--ln:#D9DEEC;--ac:#3B4CF2;--wg:#0FA38A;--tp:#F5A524;--sf2:#F5F7FC;
+--fd:'Unbounded','Trebuchet MS',sans-serif;--fb:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1222;--sf:#171C33;--ink:#ECEFFA;--mut:#8C95B8;--ln:#262D4A;--ac:#7C88FF;--wg:#2DD4B0;--tp:#FFB648;--sf2:#1D2340}}
+:root[data-theme="dark"]{--bg:#0E1222;--sf:#171C33;--ink:#ECEFFA;--mut:#8C95B8;--ln:#262D4A;--ac:#7C88FF;--wg:#2DD4B0;--tp:#FFB648;--sf2:#1D2340}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--fb)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.logo{font:700 18px var(--fd);letter-spacing:-.02em}
+.sync{font-size:12px;color:var(--mut);margin-top:2px}.sync[data-c=ok]{color:var(--wg)}.sync[data-c=err]{color:#D6334B}
+.btn{border:1px solid var(--ln);background:var(--sf);border-radius:12px;padding:9px 14px;font-weight:600}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.del{color:#D6334B}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:18px}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.mnav h2{margin:0;font:700 17px var(--fd);letter-spacing:-.02em}
+.arr{width:38px;height:38px;border-radius:50%;border:1px solid var(--ln);background:var(--sf2);font-size:18px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{font-size:12px;color:var(--mut);text-align:center;padding:4px 0;font-weight:600}
+.day{min-height:78px;border:1px solid transparent;background:var(--sf2);border-radius:12px;padding:6px;text-align:left;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.day.out{background:transparent;cursor:default}
+.day.today{border-color:var(--ac)}
+.day.has{background:color-mix(in srgb,var(--wg) 13%,var(--sf2))}
+.day b{font-size:13px}
+.day .h{font-size:11px;color:var(--mut)}
+.day .m{font-size:12px;font-weight:800;color:var(--wg);margin-top:auto;white-space:nowrap}
+.dots{display:flex;gap:3px}.dots i{width:6px;height:6px;border-radius:50%}
+@media(max-width:520px){.day{min-height:62px;padding:4px}.day .h{display:none}.day .m{font-size:10px}.card{padding:12px;border-radius:18px}}
+.tabs{display:flex;background:var(--sf2);border-radius:14px;padding:4px;gap:2px;margin-bottom:14px}
+.tabs button{flex:1;border:0;background:transparent;border-radius:10px;padding:8px 4px;font-weight:600;color:var(--mut);font-size:13px}
+.tabs button.on{background:var(--sf);color:var(--ink);box-shadow:0 1px 4px rgba(20,30,70,.12)}
+.lbl{color:var(--mut);font-size:13px}
+.big{font:700 clamp(30px,6vw,42px)/1.1 var(--fd);letter-spacing:-.03em;margin:4px 0 12px}
+.bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--sf2)}
+.bar i{display:block;height:100%}
+.leg{display:flex;gap:16px;margin-top:8px;font-size:13px;flex-wrap:wrap}
+.leg span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:6px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.st{background:var(--sf2);border-radius:14px;padding:10px 12px}
+.st b{display:block;font-size:17px;font-weight:800}
+.chart{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:6px}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;min-width:0}
+.col .s{display:flex;flex-direction:column;justify-content:flex-end;flex:1}
+.col .s i{display:block;width:100%}
+.col .s i:first-child{border-radius:4px 4px 0 0}
+.col small{font-size:10px;color:var(--mut);text-align:center;height:14px;white-space:nowrap;overflow:visible}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--ln)}
+.row .n{flex:1;font-weight:600}.row .r{text-align:right;font-weight:800}.row .r small{display:block;font-weight:400;color:var(--mut)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+h3{margin:18px 0 6px;font:700 14px var(--fd);letter-spacing:-.02em}
+dialog{border:0;border-radius:24px;padding:0;background:var(--sf);color:var(--ink);width:min(460px,calc(100% - 24px));max-height:92vh}
+dialog::backdrop{background:rgba(10,15,40,.55)}
+.dg{padding:20px}
+.dg h2{margin:0 0 12px;font:700 17px var(--fd);letter-spacing:-.02em}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut);font-weight:600}
+.f .full{grid-column:1/-1}
+input,select,textarea{background:var(--sf2);border:1px solid var(--ln);border-radius:11px;padding:10px;width:100%;color:var(--ink)}
+.pv{background:var(--sf2);border-radius:12px;padding:10px 12px;margin:12px 0;font-size:14px}
+.acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--sf2);border:1px solid var(--ln);border-radius:12px;padding:9px 12px;margin-bottom:6px}
+.chip.on{border-color:var(--ac)}
+.chip span{flex:1}.chip b{color:var(--wg)}
+.pr{display:grid;grid-template-columns:1fr 84px 70px 38px;gap:6px;margin-bottom:6px;align-items:center}
+.empty{color:var(--mut);padding:16px 0;text-align:center}
+@media(prefers-reduced-motion:no-preference){.big{transition:opacity .2s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div><div class="logo">Зміни</div><div class="sync" id="cloud">Завантаження…</div></div><div style="display:flex;gap:8px"><button class="btn" id="placesBtn">Місця роботи</button><button class="btn" id="out" hidden>Вийти</button></div></div>
+  <div class="grid">
+    <section class="card">
+      <div class="mnav"><button class="arr" id="prev" aria-label="Попередній місяць">‹</button><h2 id="mt"></h2><button class="arr" id="next" aria-label="Наступний місяць">›</button></div>
+      <div class="cal" id="cal"></div>
+    </section>
+    <section class="card">
+      <div class="tabs" id="tabs"></div>
+      <div class="lbl" id="plbl"></div>
+      <div class="big" id="total"></div>
+      <div class="bar" id="bar"></div>
+      <div class="leg" id="leg"></div>
+      <div class="stats" id="stats"></div>
+      <div class="lbl">Дохід по днях</div>
+      <div class="chart" id="chart"></div>
+      <h3>По місцях роботи</h3>
+      <div id="byplace"></div>
+    </section>
+  </div>
+</div>
+
+<dialog id="dd"><div class="dg">
+  <h2 id="dtitle"></h2>
+  <div id="dlist"></div>
+  <div class="f">
+    <label class="full">Місце роботи<select id="fp"></select></label>
+    <label>Початок<input type="time" id="fs" value="12:00"></label>
+    <label>Кінець<input type="time" id="fe" value="22:00"></label>
+    <label>Перерва, хв<input type="number" id="fb" min="0" value="0" inputmode="numeric"></label>
+    <label>Виторг<input type="number" id="fsl" min="0" step="any" inputmode="decimal" placeholder="0"></label>
+    <label class="full">Чайові<input type="number" id="ft" min="0" step="any" inputmode="decimal" placeholder="0"></label>
+    <label class="full">Нотатка<input type="text" id="fn" placeholder="Необов'язково"></label>
+  </div>
+  <div class="pv" id="pv"></div>
+  <div class="acts"><button class="btn del" id="fdel" hidden>Видалити</button><button class="btn" id="fcl">Закрити</button><button class="btn pri" id="fsv">Зберегти зміну</button></div>
+</div></dialog>
+
+<dialog id="ad"><div class="dg">
+  <h2>Вхід у трекер змін</h2>
+  <div class="f">
+    <label class="full">Логін<input type="text" id="alg" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+    <label class="full">Пароль<input type="password" id="apw" autocomplete="current-password"></label>
+  </div>
+  <div class="pv" id="aerr" role="status" style="min-height:40px">Новий користувач? Вигадайте логін і пароль та натисніть «Створити акаунт».</div>
+  <div class="acts"><button class="btn" id="aup">Створити акаунт</button><button class="btn pri" id="ain">Увійти</button></div>
+</div></dialog>
+
+<dialog id="pd"><div class="dg">
+  <h2>Місця роботи</h2>
+  <div class="f" style="margin-bottom:12px"><label class="full">Валюта<select id="cur"><option>₴</option><option>$</option><option>€</option><option>zł</option><option>£</option></select></label></div>
+  <div class="pr lbl" style="margin-bottom:2px"><span>Назва</span><span>Ставка/год</span><span>% виторгу</span><span></span></div><div id="plist"></div>
+  <h3 style="margin-top:12px">Нове місце</h3>
+  <div class="pr"><input id="pn" placeholder="Назва, напр. Ресторан «Липа»"><input id="pr" type="number" min="0" step="any" placeholder="Ставка/год" inputmode="decimal"><input id="pc" type="number" min="0" max="100" step="any" placeholder="% виторгу" inputmode="decimal"><span></span></div>
+  <div class="lbl" style="margin-bottom:12px">Ставка за годину й відсоток від виторгу — необов'язкові, можна залишити 0. Зміни впливають лише на нові зміни — старі зберігають свої умови.</div>
+  <div class="acts"><button class="btn" id="padd">Додати місце</button><button class="btn pri" id="pcl">Готово</button></div>
+</div></dialog>
+
+<script>
+const $=s=>document.querySelector(s), COLORS=['#3B4CF2','#0FA38A','#F5A524','#E5484D','#A855F7','#06B6D4'];
+const KEY='waiter-shifts-v1';
+let S={cur:'₴',places:[],shifts:[]};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const TK='waiter-token',LK='waiter-login',OK='waiter-owner';
+const setStatus=(t,c)=>{const e=document.getElementById('cloud');if(e){e.textContent=t;e.dataset.c=c||''}};
+let token='',login='',online=false,timer=null,busy=false,again=false,dirty=false;
+try{token=localStorage.getItem(TK)||'';login=localStorage.getItem(LK)||''}catch(e){}
+const blank=()=>({cur:'₴',places:[],shifts:[],last:''});
+const localSave=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+async function call(url,method,body,auth){
+  const h={'Content-Type':'application/json'};if(auth)h.Authorization='Bearer '+token;
+  const r=await fetch(url,{method,headers:h,body:body?JSON.stringify(body):undefined});
+  if(!r.ok){const e=new Error(String(r.status));e.code=r.status;throw e}
+  return r.json();
+}
+const api=(m,b)=>call('/api/data',m,b,true);
+function showUser(){$('#out').hidden=!online;$('#out').textContent='Вийти · '+login}
+function fail(e){
+  if(e&&e.code===401){online=false;showUser();setStatus('Увійдіть, щоб зберігати дані','');openAuth();return}
+  setStatus(e&&e.code===500?'База не налаштована на Vercel':'Немає зв\'язку — дані поки лише на цьому пристрої','err');
+}
+async function push(){
+  if(!online)return;if(busy){again=true;return}
+  busy=true;setStatus('Зберігаю…','w');
+  try{await api('PUT',{data:S});dirty=false;setStatus('Збережено в хмарі','ok')}catch(e){fail(e)}
+  busy=false;if(again){again=false;push()}
+}
+const save=()=>{localSave();if(online){dirty=true;clearTimeout(timer);setStatus('Зберігаю…','w');timer=setTimeout(push,600)}};
+async function pull(){
+  setStatus('Завантажую…','w');
+  try{
+    const j=await api('GET');online=true;showUser();
+    if(j.data){S=Object.assign(blank(),j.data);localSave();render();if($('#pd').open)renderPlaces();setStatus('Збережено в хмарі','ok')}
+    else if(S.places.length||S.shifts.length){await push()}
+    else setStatus('Збережено в хмарі','ok');
+    if(!S.places.length&&!$('#pd').open)openPlaces();
+  }catch(e){fail(e)}
+}
+function openAuth(){$('#aerr').textContent='';if(!$('#ad').open)$('#ad').showModal()}
+async function enter(mode){
+  const lg=$('#alg').value.trim(),pw=$('#apw').value;
+  if(!lg||!pw){$('#aerr').textContent='Введіть логін і пароль';return}
+  $('#aerr').textContent='…';
+  try{
+    const j=await call('/api/auth','POST',{action:mode,login:lg,password:pw});
+    let prev='';try{prev=localStorage.getItem(OK)||''}catch(e){}
+    if(prev&&prev!==j.login){S=blank();localSave()}
+    token=j.token;login=j.login;
+    try{localStorage.setItem(TK,token);localStorage.setItem(LK,login);localStorage.setItem(OK,login)}catch(e){}
+    $('#ad').close();$('#apw').value='';await pull();
+  }catch(e){
+    $('#aerr').textContent=e.code===401?'Невірний логін або пароль':e.code===409?'Такий логін уже зайнятий':e.code===429?'Забагато невдалих спроб. Спробуйте за 15 хвилин':e.code===500?'База ще не підключена до проєкту на Vercel':'Немає зв\'язку із сервером';
+  }
+}
+async function logout(){
+  try{await call('/api/auth','POST',{action:'logout'},true)}catch(e){}
+  token='';login='';online=false;S=blank();
+  try{localStorage.removeItem(TK);localStorage.removeItem(LK);localStorage.removeItem(OK);localStorage.removeItem(KEY)}catch(e){}
+  showUser();setStatus('Увійдіть, щоб зберігати дані','');render();openAuth();
+}
+async function initAuth(){
+  $('#ain').onclick=()=>enter('login');$('#aup').onclick=()=>enter('register');$('#out').onclick=logout;
+  $('#ad').addEventListener('keydown',e=>{if(e.key==='Enter')enter('login')});
+  $('#ad').addEventListener('cancel',e=>e.preventDefault());
+  if(token)await pull();else{setStatus('Увійдіть, щоб зберігати дані','');openAuth()}
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&online&&!dirty&&!busy&&!document.querySelector('dialog[open]'))pull()});
+}
+const pad=n=>String(n).padStart(2,'0'), iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const today=iso(new Date()), uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const nf=new Intl.NumberFormat('uk-UA',{maximumFractionDigits:0});
+const money=n=>nf.format(Math.round(n))+' '+S.cur;
+const hrs=n=>(Math.round(n*10)/10).toString().replace('.',',')+' год';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tm=t=>{const[a,b]=t.split(':').map(Number);return a*60+b};
+const hoursOf=(st,en,br)=>{let a=tm(st),b=tm(en);if(b<=a)b+=1440;return Math.max(0,(b-a-(+br||0))/60)};
+const H=s=>hoursOf(s.start,s.end,s.brk), W=s=>H(s)*s.rate, C=s=>(+s.sales||0)*(+s.pct||0)/100, T=s=>(+s.tips||0), TOT=s=>W(s)+C(s)+T(s);
+const now=new Date(); let view={y:now.getFullYear(),m:now.getMonth()}, sel=today, per='month', editing=null;
+const PER=[['week','Тиждень'],['month','Місяць'],['year','Рік'],['all','Весь час']];
+const MONTHS=['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'];
+
+function monday(ds){const d=new Date(ds+'T00:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return d}
+function range(){
+  if(per==='week'){const a=monday(sel),b=new Date(a);b.setDate(b.getDate()+6);return[iso(a),iso(b),a.getDate()+' '+MONTHS[a.getMonth()]+' – '+b.getDate()+' '+MONTHS[b.getMonth()]+' '+b.getFullYear()]}
+  if(per==='month'){const n=new Date(view.y,view.m,1).toLocaleDateString('uk-UA',{month:'long',year:'numeric'});return[view.y+'-'+pad(view.m+1)+'-01',view.y+'-'+pad(view.m+1)+'-31',n]}
+  if(per==='year')return[view.y+'-01-01',view.y+'-12-31',view.y+' рік'];
+  return['0000','9999','За весь час'];
+}
+function buckets(a,b){
+  const out=[];
+  if(per==='week'){const d=monday(sel);for(let i=0;i<7;i++){out.push({k:iso(d),l:['пн','вт','ср','чт','пт','сб','нд'][i],w:0,c:0,t:0});d.setDate(d.getDate()+1)}return[out,s=>s.date]}
+  if(per==='month'){const n=new Date(view.y,view.m+1,0).getDate();for(let i=1;i<=n;i++)out.push({k:view.y+'-'+pad(view.m+1)+'-'+pad(i),l:(i%5===0||i===1)?i:'',w:0,c:0,t:0});return[out,s=>s.date]}
+  if(per==='year'){for(let i=0;i<12;i++)out.push({k:view.y+'-'+pad(i+1),l:MONTHS[i],w:0,c:0,t:0});return[out,s=>s.date.slice(0,7)]}
+  const ys=S.shifts.map(s=>+s.date.slice(0,4));if(ys.length){for(let y=Math.min(...ys);y<=Math.max(...ys);y++)out.push({k:String(y),l:y,w:0,c:0,t:0})}
+  return[out,s=>s.date.slice(0,4)];
+}
+function render(){
+  $('#mt').textContent=(()=>{const n=new Date(view.y,view.m,1).toLocaleDateString('uk-UA',{month:'long',year:'numeric'});return n[0].toUpperCase()+n.slice(1)})();
+  // calendar
+  let h=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>`<div class="dow">${d}</div>`).join('');
+  const first=new Date(view.y,view.m,1),off=(first.getDay()+6)%7,n=new Date(view.y,view.m+1,0).getDate();
+  for(let i=0;i<off;i++)h+='<div class="day out"></div>';
+  for(let d=1;d<=n;d++){
+    const ds=view.y+'-'+pad(view.m+1)+'-'+pad(d),ss=S.shifts.filter(s=>s.date===ds);
+    const hh=ss.reduce((a,s)=>a+H(s),0),tt=ss.reduce((a,s)=>a+TOT(s),0);
+    h+=`<button class="day${ds===today?' today':''}${ss.length?' has':''}" data-d="${ds}"><b>${d}</b>`+
+      (ss.length?`<span class="dots">${ss.map(s=>`<i style="background:${s.color}"></i>`).join('')}</span><span class="h">${hrs(hh)}</span><span class="m">${nf.format(Math.round(tt))}</span>`:'')+`</button>`;
+  }
+  $('#cal').innerHTML=h;
+  // stats
+  $('#tabs').innerHTML=PER.map(([k,l])=>`<button data-p="${k}" class="${k===per?'on':''}">${l}</button>`).join('');
+  const[a,b,label]=range(),list=S.shifts.filter(s=>s.date>=a&&s.date<=b+'~');
+  const hh=list.reduce((x,s)=>x+H(s),0),wg=list.reduce((x,s)=>x+W(s),0),cm=list.reduce((x,s)=>x+C(s),0),tp=list.reduce((x,s)=>x+T(s),0),sl=list.reduce((x,s)=>x+(+s.sales||0),0),tot=wg+cm+tp;
+  $('#plbl').textContent=label[0].toUpperCase()+label.slice(1);
+  $('#total').textContent=money(tot);
+  $('#bar').innerHTML=tot?`<i style="width:${wg/tot*100}%;background:var(--wg)"></i><i style="width:${cm/tot*100}%;background:var(--ac)"></i><i style="width:${tp/tot*100}%;background:var(--tp)"></i>`:'';
+  $('#leg').innerHTML=`<span style="--c:var(--wg)">Зі ставки ${money(wg)}</span><span style="--c:var(--ac)">З відсотка ${money(cm)}</span><span style="--c:var(--tp)">Чайові ${money(tp)}</span>`;
+  const st=[['Години',hrs(hh)],['Зміни',list.length],['Виторг',money(sl)],['Чайові до виторгу',sl?Math.round(tp/sl*1000)/10+'%':'—'],['За годину (всього)',hh?money(tot/hh):'—'],['За зміну',list.length?money(tot/list.length):'—']];
+  $('#stats').innerHTML=st.map(([l,v])=>`<div class="st"><span class="lbl">${l}</span><b>${v}</b></div>`).join('');
+  // chart
+  const[bk,kf]=buckets(a,b);list.forEach(s=>{const x=bk.find(z=>z.k===kf(s));if(x){x.w+=W(s);x.c+=C(s);x.t+=T(s)}});
+  const mx=Math.max(1,...bk.map(z=>z.w+z.c+z.t));
+  $('#chart').innerHTML=bk.length?bk.map(z=>`<div class="col" title="${money(z.w+z.c+z.t)}"><div class="s"><i style="height:${z.t/mx*100}%;background:var(--tp)"></i><i style="height:${z.c/mx*100}%;background:var(--ac)"></i><i style="height:${z.w/mx*100}%;background:var(--wg)"></i></div><small>${z.l}</small></div>`).join(''):'<div class="empty" style="width:100%">Поки немає змін</div>';
+  // by place
+  const g={};list.forEach(s=>{const o=g[s.pid]=g[s.pid]||{n:s.pn,col:s.color,h:0,t:0,w:0,c:0};o.h+=H(s);o.t+=TOT(s);o.w+=W(s);o.c+=C(s)});
+  const ps=Object.values(g).sort((x,y)=>y.t-x.t);
+  $('#byplace').innerHTML=ps.length?ps.map(p=>`<div class="row"><i class="dot" style="background:${p.col}"></i><span class="n">${esc(p.n)}</span><span class="r">${money(p.t)}<small>${hrs(p.h)} · ставка ${money(p.w)} · % ${money(p.c)}</small></span></div>`).join(''):'<div class="empty">За цей період змін немає</div>';
+}
+// day dialog
+function placeOpts(sel){$('#fp').innerHTML=S.places.map(p=>`<option value="${p.id}">${esc(p.name)} — ${nf.format(p.rate)} ${S.cur}/год${p.pct?' + '+p.pct+'%':''}</option>`).join('');if(sel)$('#fp').value=sel}
+function openDay(ds,id){
+  if(!S.places.length){openPlaces();return}
+  sel=ds;editing=id||null;
+  const d=new Date(ds+'T00:00'),t=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
+  $('#dtitle').textContent=t[0].toUpperCase()+t.slice(1);
+  const ss=S.shifts.filter(s=>s.date===ds);
+  $('#dlist').innerHTML=ss.map(s=>`<button class="chip${s.id===editing?' on':''}" data-id="${s.id}"><i class="dot" style="background:${s.color}"></i><span>${esc(s.pn)} · ${s.start}–${s.end}</span><b>${money(TOT(s))}</b></button>`).join('')+(ss.length?`<button class="chip${editing?'':' on'}" data-id="">+ Нова зміна</button>`:'');
+  const s=ss.find(x=>x.id===editing);
+  placeOpts(s?s.pid:(S.last&&S.places.find(p=>p.id===S.last)?S.last:S.places[0].id));
+  $('#fs').value=s?s.start:'12:00';$('#fe').value=s?s.end:'22:00';$('#fb').value=s?s.brk:0;
+  $('#fsl').value=s&&s.sales?s.sales:'';$('#ft').value=s&&s.tips?s.tips:'';$('#fn').value=s?s.note||'':'';
+  $('#fdel').hidden=!s;$('#fdel').textContent='Видалити';preview();
+  if(!$('#dd').open)$('#dd').showModal();render();
+}
+function preview(){
+  const p=S.places.find(x=>x.id===$('#fp').value);if(!p)return;
+  const s=editing&&S.shifts.find(x=>x.id===editing),rate=s&&s.pid===p.id?s.rate:p.rate;
+  const pct=s&&s.pid===p.id?(s.pct||0):(p.pct||0),h=hoursOf($('#fs').value||'00:00',$('#fe').value||'00:00',$('#fb').value),w=h*rate,c=(+$('#fsl').value||0)*pct/100,t=+$('#ft').value||0;
+  $('#pv').innerHTML=`<b>${hrs(h)}</b> × ${nf.format(rate)} ${S.cur} = <b style="color:var(--wg)">${money(w)}</b> зі ставки<br>${pct}% від виторгу: <b style="color:var(--ac)">${money(c)}</b><br>Разом із чайовими: <b>${money(w+c+t)}</b>`;
+}
+['fp','fs','fe','fb','ft','fsl'].forEach(i=>$('#'+i).addEventListener('input',preview));
+$('#fsv').onclick=()=>{
+  const p=S.places.find(x=>x.id===$('#fp').value);if(!p||!$('#fs').value||!$('#fe').value)return;
+  const old=editing&&S.shifts.find(x=>x.id===editing);
+  const o={id:old?old.id:uid(),date:sel,pid:p.id,pn:p.name,color:p.color,rate:old&&old.pid===p.id?old.rate:p.rate,pct:old&&old.pid===p.id?old.pct:(p.pct||0),start:$('#fs').value,end:$('#fe').value,brk:+$('#fb').value||0,sales:+$('#fsl').value||0,tips:+$('#ft').value||0,note:$('#fn').value.trim()};
+  if(old)S.shifts[S.shifts.indexOf(old)]=o;else S.shifts.push(o);
+  S.last=p.id;save();$('#dd').close();render();
+};
+$('#fdel').onclick=function(){
+  if(this.textContent==='Видалити'){this.textContent='Точно видалити?';return}
+  S.shifts=S.shifts.filter(x=>x.id!==editing);save();
+  S.shifts.some(s=>s.date===sel)?openDay(sel):($('#dd').close(),render());
+};
+$('#fcl').onclick=()=>$('#dd').close();
+$('#dlist').onclick=e=>{const c=e.target.closest('.chip');if(c)openDay(sel,c.dataset.id)};
+$('#cal').onclick=e=>{const d=e.target.closest('.day[data-d]');if(d)openDay(d.dataset.d)};
+// places dialog
+function renderPlaces(){
+  $('#cur').value=S.cur;
+  $('#plist').innerHTML=S.places.map(p=>`<div class="pr" data-id="${p.id}"><input class="pname" value="${esc(p.name)}" aria-label="Назва"><input class="prate" type="number" min="0" step="any" value="${p.rate}" aria-label="Ставка за годину"><input class="ppct" type="number" min="0" max="100" step="any" value="${p.pct||0}" aria-label="Відсоток від виторгу"><button class="btn del pdel" aria-label="Видалити місце">×</button></div>`).join('')||'<div class="empty">Додай перше місце роботи, годинну ставку та/або відсоток від виторгу</div>';
+}
+function openPlaces(){renderPlaces();if(!$('#pd').open)$('#pd').showModal()}
+$('#placesBtn').onclick=openPlaces;
+$('#cur').onchange=e=>{S.cur=e.target.value;save();render()};
+$('#plist').addEventListener('change',e=>{
+  const r=e.target.closest('.pr');if(!r)return;const p=S.places.find(x=>x.id===r.dataset.id);
+  p.name=r.querySelector('.pname').value.trim()||p.name;p.rate=+r.querySelector('.prate').value||0;p.pct=+r.querySelector('.ppct').value||0;save();render();
+});
+$('#plist').addEventListener('click',e=>{
+  const b=e.target.closest('.pdel');if(!b)return;
+  if(b.textContent==='×'){b.textContent='?';return}
+  S.places=S.places.filter(x=>x.id!==b.closest('.pr').dataset.id);save();renderPlaces();render();
+});
+$('#padd').onclick=()=>{
+  const n=$('#pn').value.trim(),r=+$('#pr').value||0,pc=+$('#pc').value||0;if(!n)return;
+  S.places.push({id:uid(),name:n,rate:r,pct:pc,color:COLORS[S.places.length%COLORS.length]});
+  $('#pn').value='';$('#pr').value='';$('#pc').value='';save();renderPlaces();render();
+};
+$('#pcl').onclick=()=>$('#pd').close();
+['dd','pd'].forEach(i=>$('#'+i).addEventListener('click',e=>{if(e.target.id===i)e.target.close()}));
+// nav
+$('#prev').onclick=()=>{view.m--;if(view.m<0){view.m=11;view.y--}render()};
+$('#next').onclick=()=>{view.m++;if(view.m>11){view.m=0;view.y++}render()};
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(b){per=b.dataset.p;render()}};
+render();
+initAuth();
+</script>
+</body>
+</html>
