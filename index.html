@@ -6,104 +6,135 @@
 <title>Зміни — трекер офіціанта</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#EDF0F7;--sf:#fff;--ink:#121A33;--mut:#6A7493;--ln:#D9DEEC;--ac:#3B4CF2;--wg:#0FA38A;--tp:#F5A524;--sf2:#F5F7FC;
---fd:'Unbounded','Trebuchet MS',sans-serif;--fb:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+:root{--bg:#EFEBE1;--sf:#FAF8F2;--sf2:#F4F0E6;--ink:#1C1B18;--mut:#7A7467;--ln:#D6CFBF;--ac:#2E4F86;--wg:#2D6A4B;--tp:#D2431F;
+--fd:'Spectral',Georgia,'Times New Roman',serif;--fb:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--fm:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1222;--sf:#171C33;--ink:#ECEFFA;--mut:#8C95B8;--ln:#262D4A;--ac:#7C88FF;--wg:#2DD4B0;--tp:#FFB648;--sf2:#1D2340}}
-:root[data-theme="dark"]{--bg:#0E1222;--sf:#171C33;--ink:#ECEFFA;--mut:#8C95B8;--ln:#262D4A;--ac:#7C88FF;--wg:#2DD4B0;--tp:#FFB648;--sf2:#1D2340}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141310;--sf:#1D1B17;--sf2:#24211C;--ink:#EFEBDD;--mut:#9A9484;--ln:#38352D;--ac:#8FB0E6;--wg:#6FBF8E;--tp:#F2784F}}
+:root[data-theme="dark"]{--bg:#141310;--sf:#1D1B17;--sf2:#24211C;--ink:#EFEBDD;--mut:#9A9484;--ln:#38352D;--ac:#8FB0E6;--wg:#6FBF8E;--tp:#F2784F}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--fb)}
+body{margin:0;background-color:var(--bg);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");color:var(--ink);font:400 15px/1.5 var(--fb);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 40px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.logo{font:700 18px var(--fd);letter-spacing:-.02em}
-.sync{font-size:12px;color:var(--mut);margin-top:2px}.sync[data-c=ok]{color:var(--wg)}.sync[data-c=err]{color:#D6334B}
-.btn{border:1px solid var(--ln);background:var(--sf);border-radius:12px;padding:9px 14px;font-weight:600}
-.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
-.btn.del{color:#D6334B}
-.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
-@media(max-width:860px){.grid{grid-template-columns:1fr}}
-.card{background:var(--sf);border:1px solid var(--ln);border-radius:22px;padding:18px}
-.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.mnav h2{margin:0;font:700 17px var(--fd);letter-spacing:-.02em}
-.arr{width:38px;height:38px;border-radius:50%;border:1px solid var(--ln);background:var(--sf2);font-size:18px}
-.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-.dow{font-size:12px;color:var(--mut);text-align:center;padding:4px 0;font-weight:600}
-.day{min-height:78px;border:1px solid transparent;background:var(--sf2);border-radius:12px;padding:6px;text-align:left;display:flex;flex-direction:column;gap:2px;overflow:hidden}
-.day.out{background:transparent;cursor:default}
-.day.today{border-color:var(--ac)}
-.day.has{background:color-mix(in srgb,var(--wg) 13%,var(--sf2))}
-.day b{font-size:13px}
-.day .h{font-size:11px;color:var(--mut)}
-.day .m{font-size:12px;font-weight:800;color:var(--wg);margin-top:auto;white-space:nowrap}
-.dots{display:flex;gap:3px}.dots i{width:6px;height:6px;border-radius:50%}
-@media(max-width:520px){.day{min-height:62px;padding:4px}.day .h{display:none}.day .m{font-size:10px}.card{padding:12px;border-radius:18px}}
-.tabs{display:flex;background:var(--sf2);border-radius:14px;padding:4px;gap:2px;margin-bottom:14px}
-.tabs button{flex:1;border:0;background:transparent;border-radius:10px;padding:8px 4px;font-weight:600;color:var(--mut);font-size:13px}
-.tabs button.on{background:var(--sf);color:var(--ink);box-shadow:0 1px 4px rgba(20,30,70,.12)}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 24px 64px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--ink);margin-bottom:28px}
+.logo{font:600 30px/1 var(--fd);letter-spacing:-.01em}.logo:after{content:".";color:var(--tp)}
+.sync{font:400 11px var(--fm);letter-spacing:.04em;color:var(--mut);margin-top:6px}.sync[data-c=ok]{color:var(--wg)}.sync[data-c=err]{color:var(--tp)}
+.tools{display:flex;gap:8px}
+.btn{border:1px solid var(--ink);background:transparent;border-radius:4px;padding:8px 14px;font:500 13px var(--fb)}
+.btn:hover{background:var(--sf2)}
+.btn.pri{background:var(--ink);color:var(--bg)}.btn.pri:hover{opacity:.88}
+.btn.del{border-color:var(--ln);color:var(--tp)}
+.rm{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sf);border:1px solid var(--ln);border-left:3px solid var(--tp);padding:10px 14px;margin:-8px 0 24px;font-weight:500}
+.rm[hidden]{display:none}.rm div{display:flex;gap:8px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;align-items:start}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mnav h2{margin:0;font:500 30px/1 var(--fd);letter-spacing:-.01em}
+.arr{width:36px;height:36px;border-radius:4px;border:1px solid var(--ink);background:transparent;font:400 16px var(--fm)}
+.arr:hover{background:var(--ink);color:var(--bg)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1px solid var(--ln);border-top:1px solid var(--ink)}
+.dow{font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);padding:8px 8px;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.day{position:relative;min-height:92px;border:0;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);background:transparent;border-radius:0;padding:8px;text-align:left;display:flex;flex-direction:column;gap:1px;overflow:hidden}
+.day.out{cursor:default;background:repeating-linear-gradient(135deg,transparent 0 6px,var(--sf2) 6px 7px)}
+.day:not(.out):hover{background:var(--sf)}
+.day b{font:500 13px var(--fm);display:inline-grid;place-items:center;min-width:22px;height:22px;align-self:flex-start;margin:-3px 0 0 -3px;padding:0 3px;border-radius:11px}
+.day.today b{background:var(--ink);color:var(--bg)}
+.day .h{font:400 10.5px var(--fm);color:var(--mut)}
+.day .m{font:500 13px var(--fm);margin-top:auto;white-space:nowrap}
+.dots{position:absolute;left:0;right:0;bottom:0;display:flex;gap:1px}.dots i{flex:1;height:4px}
+.nt{font-size:0;display:inline-block;width:5px;height:5px;background:var(--tp);margin-left:5px}
+.receipt{position:relative;background:var(--sf);padding:22px 22px 26px;margin:12px 0;filter:drop-shadow(0 1px 0 var(--ln)) drop-shadow(0 8px 14px rgba(40,30,10,.07))}
+.receipt:before,.receipt:after{content:"";position:absolute;left:0;right:0;height:10px;background:linear-gradient(135deg,var(--sf) 5px,transparent 0) 0 0/10px 10px,linear-gradient(225deg,var(--sf) 5px,transparent 0) 0 0/10px 10px}
+.receipt:before{top:-10px}.receipt:after{bottom:-10px;transform:scaleY(-1)}
+.tabs{display:flex;gap:16px;border-bottom:1px solid var(--ln);margin-bottom:16px}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:6px 0;font:500 11px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.tabs button.on{color:var(--ink);border-color:var(--ink)}
 .lbl{color:var(--mut);font-size:13px}
-.big{font:700 clamp(30px,6vw,42px)/1.1 var(--fd);letter-spacing:-.03em;margin:4px 0 12px}
-.bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--sf2)}
-.bar i{display:block;height:100%}
-.leg{display:flex;gap:16px;margin-top:8px;font-size:13px;flex-wrap:wrap}
-.leg span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:6px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
-.st{background:var(--sf2);border-radius:14px;padding:10px 12px}
-.st b{display:block;font-size:17px;font-weight:800}
-.chart{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:6px}
+#plbl{font:400 12px var(--fm);letter-spacing:.04em}
+.big{font:500 clamp(40px,7vw,54px)/1 var(--fd);letter-spacing:-.02em;margin:8px 0 18px}
+.ln{display:flex;align-items:baseline;gap:8px;padding:4px 0;font-size:14px}
+.ln u{flex:1;border-bottom:1px dotted var(--mut);transform:translateY(-3px);text-decoration:none}
+.ln b{font:500 14px var(--fm)}.sw{width:8px;height:8px;flex:none;align-self:center}
+.bar{display:flex;height:6px;background:var(--sf2);margin:12px 0 4px}.bar i{display:block;height:100%}
+.stats{margin:16px 0 0;border-top:1px dashed var(--mut);padding-top:8px}
+.st{display:flex;align-items:baseline;gap:8px;padding:4px 0;font-size:13px}
+.st .lbl{display:flex;flex:1;align-items:baseline;gap:6px}
+.st .lbl:after{content:"";flex:1;border-bottom:1px dotted var(--ln);transform:translateY(-3px)}
+.st b{font:500 13px var(--fm)}
+button.st{border:0;background:none;text-align:left;width:100%;cursor:default;color:inherit}
+button.st[data-d]:not([data-d=""]){cursor:pointer}
+#rec .stats{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;border:0;padding:0;margin:0}
+#rec .st{display:block;border-top:1px solid var(--ln);padding:12px 0}
+#rec .st .lbl{display:block;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase}
+#rec .st .lbl:after{display:none}
+#rec .st b{display:block;font:500 26px/1.2 var(--fd);margin:2px 0}
+#rec .st .lbl:last-child{font:400 12px var(--fb);text-transform:none;letter-spacing:0}
+#rec button.st[data-d]:not([data-d=""]):hover b{color:var(--ac)}
+.band{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:56px}
+h3{font:500 11px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.chart{display:flex;align-items:flex-end;gap:4px;height:150px}
 .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;min-width:0}
-.col .s{display:flex;flex-direction:column;justify-content:flex-end;flex:1}
-.col .s i{display:block;width:100%}
-.col .s i:first-child{border-radius:4px 4px 0 0}
-.col small{font-size:10px;color:var(--mut);text-align:center;height:14px;white-space:nowrap;overflow:visible}
-.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--ln)}
-.row .n{flex:1;font-weight:600}.row .r{text-align:right;font-weight:800}.row .r small{display:block;font-weight:400;color:var(--mut)}
-.dot{width:10px;height:10px;border-radius:50%;flex:none}
-h3{margin:18px 0 6px;font:700 14px var(--fd);letter-spacing:-.02em}
-dialog{border:0;border-radius:24px;padding:0;background:var(--sf);color:var(--ink);width:min(460px,calc(100% - 24px));max-height:92vh}
-dialog::backdrop{background:rgba(10,15,40,.55)}
-.dg{padding:20px}
-.dg h2{margin:0 0 12px;font:700 17px var(--fd);letter-spacing:-.02em}
-.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut);font-weight:600}
+.col .s{display:flex;flex-direction:column;justify-content:flex-end;flex:1}.col .s i{display:block;width:100%}
+.col small{font:400 10px var(--fm);color:var(--mut);text-align:center;height:16px;white-space:nowrap;border-top:1px solid var(--ink);padding-top:2px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln)}
+.row .n{flex:1;font-weight:500}.row .r{text-align:right;font:500 14px var(--fm)}.row .r small{display:block;font:400 11px var(--fb);color:var(--mut)}
+.dot{width:8px;height:8px;flex:none}
+.br{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:start;padding:6px 0}
+.br>span{font:500 12px var(--fm)}.br .tr{height:6px;background:var(--sf2);margin:6px 0 3px}
+.br .tr i{display:block;height:100%;background:var(--mut)}.br.top .tr i{background:var(--wg)}.br small{color:var(--mut);font-size:12px}.br b{font:500 13px var(--fm)}
+.empty{color:var(--mut);padding:18px 0;font-style:italic;font-family:var(--fd)}
+dialog{border:1px solid var(--ink);border-radius:6px;padding:0;background:var(--sf);color:var(--ink);width:min(480px,calc(100% - 24px));max-height:92vh;box-shadow:0 20px 50px rgba(20,15,5,.3)}
+dialog::backdrop{background:rgba(20,16,8,.5)}
+.dg{padding:24px}
+.dg h2{margin:0 0 16px;font:500 26px/1.1 var(--fd)}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f label{display:flex;flex-direction:column;gap:5px;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
 .f .full{grid-column:1/-1}
-input,select,textarea{background:var(--sf2);border:1px solid var(--ln);border-radius:11px;padding:10px;width:100%;color:var(--ink)}
-.pv{background:var(--sf2);border-radius:12px;padding:10px 12px;margin:12px 0;font-size:14px}
+input,select,textarea{background:var(--bg);border:1px solid var(--ln);border-radius:4px;padding:9px 10px;width:100%;color:var(--ink);font:400 15px var(--fb);text-transform:none;letter-spacing:0}
+input[type=number],input[type=time]{font-family:var(--fm)}
+input:focus,select:focus,textarea:focus{border-color:var(--ink);outline:0}
+textarea{resize:vertical;min-height:58px}
+.pv{background:var(--sf2);border-left:3px solid var(--wg);padding:10px 12px;margin:14px 0;font-size:14px}
 .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-.chip{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--sf2);border:1px solid var(--ln);border-radius:12px;padding:9px 12px;margin-bottom:6px}
-.chip.on{border-color:var(--ac)}
-.chip span{flex:1}.chip b{color:var(--wg)}
+.chip{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:1px solid var(--ln);border-radius:4px;padding:9px 12px;margin-bottom:6px}
+.chip.on{border-color:var(--ink);background:var(--sf2)}.chip span{flex:1}.chip b{font:500 13px var(--fm);color:var(--wg)}
 .pr{display:grid;grid-template-columns:1fr 84px 70px 38px;gap:6px;margin-bottom:6px;align-items:center}
-.empty{color:var(--mut);padding:16px 0;text-align:center}
-@media(prefers-reduced-motion:no-preference){.big{transition:opacity .2s}}
+@media(max-width:900px){.grid{grid-template-columns:1fr;gap:36px}.band{grid-template-columns:1fr;gap:40px;margin-top:44px}}
+@media(max-width:560px){.wrap{padding:16px 14px 48px}.day{min-height:62px;padding:5px}.day .h{display:none}.day .m{font-size:10px}.dow{padding:6px 2px;text-align:center;font-size:9px;letter-spacing:.04em}.mnav h2,.logo{font-size:24px}.receipt{padding:20px 16px 22px}#rec .stats{grid-template-columns:1fr}.top{margin-bottom:22px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><div><div class="logo">Зміни</div><div class="sync" id="cloud">Завантаження…</div></div><div style="display:flex;gap:8px"><button class="btn" id="placesBtn">Місця роботи</button><button class="btn" id="out" hidden>Вийти</button></div></div>
-  <div class="grid">
-    <section class="card">
-      <div class="mnav"><button class="arr" id="prev" aria-label="Попередній місяць">‹</button><h2 id="mt"></h2><button class="arr" id="next" aria-label="Наступний місяць">›</button></div>
+  <header class="top">
+    <div><div class="logo">Зміни</div><div class="sync" id="cloud">Завантаження…</div></div>
+    <div class="tools"><button class="btn" id="placesBtn">Місця роботи</button><button class="btn" id="out" hidden>Вийти</button></div>
+  </header>
+  <div class="rm" id="rm" hidden><span>Сьогоднішню зміну ще не внесено</span><div><button class="btn pri" id="rmadd">Додати зміну</button><button class="btn" id="rmno">Вихідний</button></div></div>
+  <main class="grid">
+    <section>
+      <div class="mnav"><button class="arr" id="prev" aria-label="Попередній місяць">←</button><h2 id="mt"></h2><button class="arr" id="next" aria-label="Наступний місяць">→</button></div>
       <div class="cal" id="cal"></div>
     </section>
-    <section class="card">
+    <aside class="receipt">
       <div class="tabs" id="tabs"></div>
       <div class="lbl" id="plbl"></div>
       <div class="big" id="total"></div>
+      <div id="leg"></div>
       <div class="bar" id="bar"></div>
-      <div class="leg" id="leg"></div>
       <div class="stats" id="stats"></div>
-      <div class="lbl">Дохід по днях</div>
-      <div class="chart" id="chart"></div>
-      <h3>По місцях роботи</h3>
-      <div id="byplace"></div>
-    </section>
-  </div>
+    </aside>
+  </main>
+  <section class="band">
+    <div><h3>Дохід по днях</h3><div class="chart" id="chart"></div></div>
+    <div><h3>По місцях роботи</h3><div id="byplace"></div></div>
+  </section>
+  <section class="band">
+    <div><h3>Які дні найкращі</h3><div id="best"></div></div>
+    <div><h3>Рекорди за весь час</h3><div id="rec"></div></div>
+  </section>
 </div>
 
 <dialog id="dd"><div class="dg">
@@ -116,7 +147,7 @@ input,select,textarea{background:var(--sf2);border:1px solid var(--ln);border-ra
     <label>Перерва, хв<input type="number" id="fb" min="0" value="0" inputmode="numeric"></label>
     <label>Виторг<input type="number" id="fsl" min="0" step="any" inputmode="decimal" placeholder="0"></label>
     <label class="full">Чайові<input type="number" id="ft" min="0" step="any" inputmode="decimal" placeholder="0"></label>
-    <label class="full">Нотатка<input type="text" id="fn" placeholder="Необов'язково"></label>
+    <label class="full">Нотатка до зміни<textarea id="fn" rows="2" maxlength="500" placeholder="Напр.: банкет на 20 осіб, замінював колегу, свято…"></textarea></label>
   </div>
   <div class="pv" id="pv"></div>
   <div class="acts"><button class="btn del" id="fdel" hidden>Видалити</button><button class="btn" id="fcl">Закрити</button><button class="btn pri" id="fsv">Зберегти зміну</button></div>
@@ -139,6 +170,10 @@ input,select,textarea{background:var(--sf2);border:1px solid var(--ln);border-ra
   <h3 style="margin-top:12px">Нове місце</h3>
   <div class="pr"><input id="pn" placeholder="Назва, напр. Ресторан «Липа»"><input id="pr" type="number" min="0" step="any" placeholder="Ставка/год" inputmode="decimal"><input id="pc" type="number" min="0" max="100" step="any" placeholder="% виторгу" inputmode="decimal"><span></span></div>
   <div class="lbl" style="margin-bottom:12px">Ставка за годину й відсоток від виторгу — необов'язкові, можна залишити 0. Зміни впливають лише на нові зміни — старі зберігають свої умови.</div>
+  <h3>Нагадування</h3>
+  <div class="f"><label>Нагадувати<select id="rmon"><option value="0">Вимкнено</option><option value="1">Щодня</option></select></label><label>О котрій<input type="time" id="rmt" value="23:00"></label></div>
+  <div class="lbl" style="margin:8px 0">Нагадування з'являється вгорі сайту, якщо після цього часу ще немає зміни за сьогодні, а також сповіщенням, поки сторінка відкрита. Щоб воно приходило завжди, навіть коли сайт закритий, додайте його в календар телефону:</div>
+  <button class="btn" id="ics" style="margin-bottom:12px">Додати в календар телефону (.ics)</button>
   <div class="acts"><button class="btn" id="padd">Додати місце</button><button class="btn pri" id="pcl">Готово</button></div>
 </div></dialog>
 
@@ -224,6 +259,35 @@ const now=new Date(); let view={y:now.getFullYear(),m:now.getMonth()}, sel=today
 const PER=[['week','Тиждень'],['month','Місяць'],['year','Рік'],['all','Весь час']];
 const MONTHS=['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'];
 
+function bestHtml(list){
+  if(!list.length)return '<div class="empty">Додайте зміни, щоб побачити закономірності</div>';
+  const wd=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],g=wd.map(()=>({n:0,t:0,h:0})),ty={'Ранок':{n:0,t:0,h:0},'День':{n:0,t:0,h:0},'Вечір':{n:0,t:0,h:0}};
+  list.forEach(s=>{const i=(new Date(s.date+'T00:00').getDay()+6)%7,m=tm(s.start),k=m<720?'Ранок':m<1020?'День':'Вечір';[g[i],ty[k]].forEach(o=>{o.n++;o.t+=TOT(s);o.h+=H(s)})});
+  const rows=items=>{
+    const v=items.filter(x=>x[1].n),av=o=>o.t/o.n,mx=Math.max(1,...v.map(x=>av(x[1])));
+    const top=v.length>1?v.reduce((a,b)=>av(b[1])>av(a[1])?b:a)[0]:null;
+    return v.map(([l,o])=>`<div class="br${l===top?' top':''}"><span>${l}${l===top?' ★':''}</span><div><div class="tr"><i style="width:${av(o)/mx*100}%"></i></div><b>${money(av(o))}</b> <small>за зміну · ${o.n} зм. · ${o.h?money(o.t/o.h):'—'}/год</small></div></div>`).join('');
+  };
+  return `<div class="lbl">За вибраний період, середнє за зміну</div>${rows(wd.map((l,i)=>[l,g[i]]))}<div class="lbl" style="margin-top:10px">За типом зміни: ранок (до 12:00), день (до 17:00), вечір</div>${rows(Object.entries(ty))}`;
+}
+function recHtml(){
+  const A=S.shifts;if(!A.length)return '<div class="empty">Рекорди з\'являться, коли додасте зміни</div>';
+  const fd=ds=>new Date(ds+'T00:00').toLocaleDateString('uk-UA',{day:'numeric',month:'long',year:'numeric'});
+  const grp=f=>{const m={};A.forEach(s=>{const k=f(s);m[k]=(m[k]||0)+TOT(s)});return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]};
+  const best=f=>A.reduce((a,b)=>f(b)>f(a)?b:a);
+  const bs=best(TOT),bt=best(T),bl=best(s=>+s.sales||0),bd=grp(s=>s.date),bw=grp(s=>iso(monday(s.date))),bm=grp(s=>s.date.slice(0,7));
+  const mn=new Date(bm[0]+'-01T00:00').toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+  const items=[['Найкраща зміна',money(TOT(bs)),fd(bs.date)+' · '+bs.pn,bs.date,1],['Найкращий день',money(bd[1]),fd(bd[0]),bd[0],1],['Найкращий тиждень',money(bw[1]),'з '+fd(bw[0]),'',1],['Найкращий місяць',money(bm[1]),mn,'',1],['Найбільші чайові за зміну',money(T(bt)),fd(bt.date),bt.date,T(bt)],['Найбільший виторг за зміну',money(+bl.sales||0),fd(bl.date),bl.date,+bl.sales||0]];
+  return '<div class="stats">'+items.filter(i=>i[4]>0).map(i=>`<button class="st" data-d="${i[3]}"><span class="lbl">${i[0]}</span><b>${i[1]}</b><span class="lbl">${esc(i[2])}</span></button>`).join('')+'</div>';
+}
+let noted='';
+function checkReminder(){
+  const r=S.remind,b=$('#rm'),d=new Date(),td=iso(d),hm=pad(d.getHours())+':'+pad(d.getMinutes());
+  let off='';try{off=localStorage.getItem('waiter-rm-off')||''}catch(e){}
+  const due=!!(r&&r.on&&hm>=r.time&&!S.shifts.some(s=>s.date===td)&&off!==td);
+  b.hidden=!due;
+  if(due&&noted!==td&&window.Notification&&Notification.permission==='granted'){noted=td;try{new Notification('Внести сьогоднішню зміну',{body:'Додайте години, виторг і чайові'})}catch(e){}}
+}
 function monday(ds){const d=new Date(ds+'T00:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return d}
 function range(){
   if(per==='week'){const a=monday(sel),b=new Date(a);b.setDate(b.getDate()+6);return[iso(a),iso(b),a.getDate()+' '+MONTHS[a.getMonth()]+' – '+b.getDate()+' '+MONTHS[b.getMonth()]+' '+b.getFullYear()]}
@@ -248,7 +312,7 @@ function render(){
   for(let d=1;d<=n;d++){
     const ds=view.y+'-'+pad(view.m+1)+'-'+pad(d),ss=S.shifts.filter(s=>s.date===ds);
     const hh=ss.reduce((a,s)=>a+H(s),0),tt=ss.reduce((a,s)=>a+TOT(s),0);
-    h+=`<button class="day${ds===today?' today':''}${ss.length?' has':''}" data-d="${ds}"><b>${d}</b>`+
+    h+=`<button class="day${ds===today?' today':''}${ss.length?' has':''}" data-d="${ds}"><b>${d}${ss.some(s=>s.note)?'<span class="nt" title="Є нотатка">✎</span>':''}</b>`+
       (ss.length?`<span class="dots">${ss.map(s=>`<i style="background:${s.color}"></i>`).join('')}</span><span class="h">${hrs(hh)}</span><span class="m">${nf.format(Math.round(tt))}</span>`:'')+`</button>`;
   }
   $('#cal').innerHTML=h;
@@ -259,7 +323,7 @@ function render(){
   $('#plbl').textContent=label[0].toUpperCase()+label.slice(1);
   $('#total').textContent=money(tot);
   $('#bar').innerHTML=tot?`<i style="width:${wg/tot*100}%;background:var(--wg)"></i><i style="width:${cm/tot*100}%;background:var(--ac)"></i><i style="width:${tp/tot*100}%;background:var(--tp)"></i>`:'';
-  $('#leg').innerHTML=`<span style="--c:var(--wg)">Зі ставки ${money(wg)}</span><span style="--c:var(--ac)">З відсотка ${money(cm)}</span><span style="--c:var(--tp)">Чайові ${money(tp)}</span>`;
+  $('#leg').innerHTML=[['--wg','Зі ставки',wg],['--ac','З відсотка від виторгу',cm],['--tp','Чайові',tp]].map(([c,l,v])=>`<div class="ln"><i class="sw" style="background:var(${c})"></i><span>${l}</span><u></u><b>${money(v)}</b></div>`).join('');
   const st=[['Години',hrs(hh)],['Зміни',list.length],['Виторг',money(sl)],['Чайові до виторгу',sl?Math.round(tp/sl*1000)/10+'%':'—'],['За годину (всього)',hh?money(tot/hh):'—'],['За зміну',list.length?money(tot/list.length):'—']];
   $('#stats').innerHTML=st.map(([l,v])=>`<div class="st"><span class="lbl">${l}</span><b>${v}</b></div>`).join('');
   // chart
@@ -270,6 +334,7 @@ function render(){
   const g={};list.forEach(s=>{const o=g[s.pid]=g[s.pid]||{n:s.pn,col:s.color,h:0,t:0,w:0,c:0};o.h+=H(s);o.t+=TOT(s);o.w+=W(s);o.c+=C(s)});
   const ps=Object.values(g).sort((x,y)=>y.t-x.t);
   $('#byplace').innerHTML=ps.length?ps.map(p=>`<div class="row"><i class="dot" style="background:${p.col}"></i><span class="n">${esc(p.n)}</span><span class="r">${money(p.t)}<small>${hrs(p.h)} · ставка ${money(p.w)} · % ${money(p.c)}</small></span></div>`).join(''):'<div class="empty">За цей період змін немає</div>';
+  $('#best').innerHTML=bestHtml(list);$('#rec').innerHTML=recHtml();checkReminder();
 }
 // day dialog
 function placeOpts(sel){$('#fp').innerHTML=S.places.map(p=>`<option value="${p.id}">${esc(p.name)} — ${nf.format(p.rate)} ${S.cur}/год${p.pct?' + '+p.pct+'%':''}</option>`).join('');if(sel)$('#fp').value=sel}
@@ -279,7 +344,7 @@ function openDay(ds,id){
   const d=new Date(ds+'T00:00'),t=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
   $('#dtitle').textContent=t[0].toUpperCase()+t.slice(1);
   const ss=S.shifts.filter(s=>s.date===ds);
-  $('#dlist').innerHTML=ss.map(s=>`<button class="chip${s.id===editing?' on':''}" data-id="${s.id}"><i class="dot" style="background:${s.color}"></i><span>${esc(s.pn)} · ${s.start}–${s.end}</span><b>${money(TOT(s))}</b></button>`).join('')+(ss.length?`<button class="chip${editing?'':' on'}" data-id="">+ Нова зміна</button>`:'');
+  $('#dlist').innerHTML=ss.map(s=>`<button class="chip${s.id===editing?' on':''}" data-id="${s.id}"><i class="dot" style="background:${s.color}"></i><span>${esc(s.pn)} · ${s.start}–${s.end}${s.note?`<small class="lbl" style="display:block;white-space:pre-wrap">${esc(s.note)}</small>`:''}</span><b>${money(TOT(s))}</b></button>`).join('')+(ss.length?`<button class="chip${editing?'':' on'}" data-id="">+ Нова зміна</button>`:'');
   const s=ss.find(x=>x.id===editing);
   placeOpts(s?s.pid:(S.last&&S.places.find(p=>p.id===S.last)?S.last:S.places[0].id));
   $('#fs').value=s?s.start:'12:00';$('#fe').value=s?s.end:'22:00';$('#fb').value=s?s.brk:0;
@@ -311,7 +376,7 @@ $('#dlist').onclick=e=>{const c=e.target.closest('.chip');if(c)openDay(sel,c.dat
 $('#cal').onclick=e=>{const d=e.target.closest('.day[data-d]');if(d)openDay(d.dataset.d)};
 // places dialog
 function renderPlaces(){
-  $('#cur').value=S.cur;
+  $('#cur').value=S.cur;$('#rmon').value=S.remind&&S.remind.on?'1':'0';$('#rmt').value=(S.remind&&S.remind.time)||'23:00';
   $('#plist').innerHTML=S.places.map(p=>`<div class="pr" data-id="${p.id}"><input class="pname" value="${esc(p.name)}" aria-label="Назва"><input class="prate" type="number" min="0" step="any" value="${p.rate}" aria-label="Ставка за годину"><input class="ppct" type="number" min="0" max="100" step="any" value="${p.pct||0}" aria-label="Відсоток від виторгу"><button class="btn del pdel" aria-label="Видалити місце">×</button></div>`).join('')||'<div class="empty">Додай перше місце роботи, годинну ставку та/або відсоток від виторгу</div>';
 }
 function openPlaces(){renderPlaces();if(!$('#pd').open)$('#pd').showModal()}
@@ -333,6 +398,22 @@ $('#padd').onclick=()=>{
 };
 $('#pcl').onclick=()=>$('#pd').close();
 ['dd','pd'].forEach(i=>$('#'+i).addEventListener('click',e=>{if(e.target.id===i)e.target.close()}));
+// reminders
+function setRemind(){
+  S.remind={on:$('#rmon').value==='1',time:$('#rmt').value||'23:00'};
+  if(S.remind.on&&window.Notification&&Notification.permission==='default'){try{Notification.requestPermission()}catch(e){}}
+  save();checkReminder();
+}
+$('#rmon').addEventListener('change',setRemind);$('#rmt').addEventListener('change',setRemind);
+$('#ics').onclick=()=>{
+  const t=($('#rmt').value||'23:00').replace(':',''),d=new Date(),ds=d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//waiter-tracker//UK','BEGIN:VEVENT','UID:waiter-reminder-'+Date.now()+'@tracker','DTSTAMP:'+ds+'T000000Z','DTSTART:'+ds+'T'+t+'00','DURATION:PT10M','RRULE:FREQ=DAILY','SUMMARY:Внести зміну в трекер','DESCRIPTION:'+location.href,'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:Внести зміну в трекер','END:VALARM','END:VEVENT','END:VCALENDAR'];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([L.join('\r\n')],{type:'text/calendar'}));a.download='nagaduvannya.ics';document.body.appendChild(a);a.click();a.remove();
+};
+$('#rmadd').onclick=()=>openDay(iso(new Date()));
+$('#rmno').onclick=()=>{try{localStorage.setItem('waiter-rm-off',iso(new Date()))}catch(e){}checkReminder()};
+setInterval(checkReminder,30000);
+$('#rec').onclick=e=>{const b=e.target.closest('.st');if(b&&b.dataset.d){const d=new Date(b.dataset.d+'T00:00');view={y:d.getFullYear(),m:d.getMonth()};openDay(b.dataset.d)}};
 // nav
 $('#prev').onclick=()=>{view.m--;if(view.m<0){view.m=11;view.y--}render()};
 $('#next').onclick=()=>{view.m++;if(view.m>11){view.m=0;view.y++}render()};
