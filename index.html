@@ -98,6 +98,9 @@ h3{margin:0 0 14px;font:700 16px var(--fb);letter-spacing:-.02em}
 .br .tr i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc),var(--acc2))}.br.top .tr i{background:linear-gradient(90deg,var(--wg),#6EE7B7)}
 .br small{color:var(--mut);font-size:12px}
 .empty{color:var(--mut);padding:18px 0;text-align:center}
+
+.pager{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--cell);border:1px solid var(--cell-bd);border-radius:14px;padding:4px;margin-bottom:14px}
+.pager button{width:34px;height:34px;border:0;border-radius:10px;background:transparent;font-size:18px}.pager button:hover{background:var(--seg-on)}.pager span{font-size:13px;font-weight:600}
 dialog{border:1px solid var(--glass-bd);border-radius:28px;padding:0;background:var(--dlg);-webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);color:var(--ink);width:min(480px,calc(100% - 24px));max-height:92vh;box-shadow:inset 0 1px 0 var(--hi),0 30px 80px rgba(10,15,40,.35)}
 dialog::backdrop{background:rgba(10,14,30,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .dg{padding:24px}.dg h2{margin:0 0 16px;font:700 22px/1.15 var(--fb);letter-spacing:-.03em}
@@ -166,13 +169,12 @@ textarea{resize:vertical;min-height:58px}
     <label class="full">Місце роботи<select id="fp"></select></label>
     <label>Початок<input type="time" id="fs" value="12:00"></label>
     <label>Кінець<input type="time" id="fe" value="22:00"></label>
-    <label>Перерва, хв<input type="number" id="fb" min="0" value="0" inputmode="numeric"></label>
     <label>Виторг<input type="number" id="fsl" min="0" step="any" inputmode="decimal" placeholder="0"></label>
-    <label class="full">Чайові<input type="number" id="ft" min="0" step="any" inputmode="decimal" placeholder="0"></label>
+    <label>Чайові<input type="number" id="ft" min="0" step="any" inputmode="decimal" placeholder="0"></label>
     <label class="full">Нотатка до зміни<textarea id="fn" rows="2" maxlength="500" placeholder="Напр.: банкет на 20 осіб, замінював колегу, свято…"></textarea></label>
   </div>
   <div class="pv" id="pv"></div>
-  <div class="acts"><button class="btn del" id="fdel" hidden>Видалити</button><button class="btn" id="fcl">Закрити</button><button class="btn pri" id="fsv">Зберегти зміну</button></div>
+  <div class="acts"><button class="btn del" id="fdel" hidden>Видалити</button><button class="btn" id="fnew" hidden>Нова зміна</button><button class="btn" id="fcl">Закрити</button><button class="btn pri" id="fsv">Зберегти зміну</button></div>
 </div></dialog>
 
 <dialog id="ad"><div class="dg">
@@ -275,8 +277,8 @@ const money=n=>nf.format(Math.round(n))+' '+S.cur;
 const hrs=n=>(Math.round(n*10)/10).toString().replace('.',',')+' год';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tm=t=>{const[a,b]=t.split(':').map(Number);return a*60+b};
-const hoursOf=(st,en,br)=>{let a=tm(st),b=tm(en);if(b<=a)b+=1440;return Math.max(0,(b-a-(+br||0))/60)};
-const H=s=>hoursOf(s.start,s.end,s.brk), W=s=>H(s)*s.rate, C=s=>(+s.sales||0)*(+s.pct||0)/100, T=s=>(+s.tips||0), TOT=s=>W(s)+C(s)+T(s);
+const hoursOf=(st,en)=>{let a=tm(st),b=tm(en);if(b<=a)b+=1440;return Math.max(0,(b-a)/60)};
+const H=s=>hoursOf(s.start,s.end), W=s=>H(s)*s.rate, C=s=>(+s.sales||0)*(+s.pct||0)/100, T=s=>(+s.tips||0), TOT=s=>W(s)+C(s)+T(s);
 const now=new Date(); let view={y:now.getFullYear(),m:now.getMonth()}, sel=today, per='month', editing=null;
 const PER=[['week','Тиждень'],['month','Місяць'],['year','Рік'],['all','Весь час']];
 const MONTHS=['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'];
@@ -362,29 +364,31 @@ function render(){
 function placeOpts(sel){$('#fp').innerHTML=S.places.map(p=>`<option value="${p.id}">${esc(p.name)} — ${nf.format(p.rate)} ${S.cur}/год${p.pct?' + '+p.pct+'%':''}</option>`).join('');if(sel)$('#fp').value=sel}
 function openDay(ds,id){
   if(!S.places.length){openPlaces();return}
-  sel=ds;editing=id||null;
+  sel=ds;
+  const ss=S.shifts.filter(s=>s.date===ds).sort((a,b)=>tm(a.start)-tm(b.start));
+  if(id===undefined&&ss.length)id=ss[0].id;
+  editing=id||null;
   const d=new Date(ds+'T00:00'),t=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
   $('#dtitle').textContent=t[0].toUpperCase()+t.slice(1);
-  const ss=S.shifts.filter(s=>s.date===ds);
-  $('#dlist').innerHTML=ss.map(s=>`<button class="chip${s.id===editing?' on':''}" data-id="${s.id}"><i class="dot" style="background:${s.color}"></i><span>${esc(s.pn)} · ${s.start}–${s.end}${s.note?`<small class="lbl" style="display:block;white-space:pre-wrap">${esc(s.note)}</small>`:''}</span><b>${money(TOT(s))}</b></button>`).join('')+(ss.length?`<button class="chip${editing?'':' on'}" data-id="">+ Нова зміна</button>`:'');
-  const s=ss.find(x=>x.id===editing);
+  const s=ss.find(x=>x.id===editing),i=ss.indexOf(s);
+  $('#dlist').innerHTML=s&&ss.length>1?`<div class="pager"><button data-id="${ss[(i+ss.length-1)%ss.length].id}" aria-label="Попередня зміна">‹</button><span>Зміна ${i+1} з ${ss.length}</span><button data-id="${ss[(i+1)%ss.length].id}" aria-label="Наступна зміна">›</button></div>`:'';
   placeOpts(s?s.pid:(S.last&&S.places.find(p=>p.id===S.last)?S.last:S.places[0].id));
-  $('#fs').value=s?s.start:'12:00';$('#fe').value=s?s.end:'22:00';$('#fb').value=s?s.brk:0;
+  $('#fs').value=s?s.start:'12:00';$('#fe').value=s?s.end:'22:00';
   $('#fsl').value=s&&s.sales?s.sales:'';$('#ft').value=s&&s.tips?s.tips:'';$('#fn').value=s?s.note||'':'';
-  $('#fdel').hidden=!s;$('#fdel').textContent='Видалити';preview();
+  $('#fdel').hidden=!s;$('#fnew').hidden=!s;$('#fdel').textContent='Видалити';preview();
   if(!$('#dd').open)$('#dd').showModal();render();
 }
 function preview(){
   const p=S.places.find(x=>x.id===$('#fp').value);if(!p)return;
   const s=editing&&S.shifts.find(x=>x.id===editing),rate=s&&s.pid===p.id?s.rate:p.rate;
-  const pct=s&&s.pid===p.id?(s.pct||0):(p.pct||0),h=hoursOf($('#fs').value||'00:00',$('#fe').value||'00:00',$('#fb').value),w=h*rate,c=(+$('#fsl').value||0)*pct/100,t=+$('#ft').value||0;
+  const pct=s&&s.pid===p.id?(s.pct||0):(p.pct||0),h=hoursOf($('#fs').value||'00:00',$('#fe').value||'00:00'),w=h*rate,c=(+$('#fsl').value||0)*pct/100,t=+$('#ft').value||0;
   $('#pv').innerHTML=`<b>${hrs(h)}</b> × ${nf.format(rate)} ${S.cur} = <b style="color:var(--wg)">${money(w)}</b> зі ставки<br>${pct}% від виторгу: <b style="color:var(--ac)">${money(c)}</b><br>Разом із чайовими: <b>${money(w+c+t)}</b>`;
 }
-['fp','fs','fe','fb','ft','fsl'].forEach(i=>$('#'+i).addEventListener('input',preview));
+['fp','fs','fe','ft','fsl'].forEach(i=>$('#'+i).addEventListener('input',preview));
 $('#fsv').onclick=()=>{
   const p=S.places.find(x=>x.id===$('#fp').value);if(!p||!$('#fs').value||!$('#fe').value)return;
   const old=editing&&S.shifts.find(x=>x.id===editing);
-  const o={id:old?old.id:uid(),date:sel,pid:p.id,pn:p.name,color:p.color,rate:old&&old.pid===p.id?old.rate:p.rate,pct:old&&old.pid===p.id?old.pct:(p.pct||0),start:$('#fs').value,end:$('#fe').value,brk:+$('#fb').value||0,sales:+$('#fsl').value||0,tips:+$('#ft').value||0,note:$('#fn').value.trim()};
+  const o={id:old?old.id:uid(),date:sel,pid:p.id,pn:p.name,color:p.color,rate:old&&old.pid===p.id?old.rate:p.rate,pct:old&&old.pid===p.id?old.pct:(p.pct||0),start:$('#fs').value,end:$('#fe').value,brk:0,sales:+$('#fsl').value||0,tips:+$('#ft').value||0,note:$('#fn').value.trim()};
   if(old)S.shifts[S.shifts.indexOf(old)]=o;else S.shifts.push(o);
   S.last=p.id;save();$('#dd').close();render();
 };
@@ -394,7 +398,8 @@ $('#fdel').onclick=function(){
   S.shifts.some(s=>s.date===sel)?openDay(sel):($('#dd').close(),render());
 };
 $('#fcl').onclick=()=>$('#dd').close();
-$('#dlist').onclick=e=>{const c=e.target.closest('.chip');if(c)openDay(sel,c.dataset.id)};
+$('#dlist').onclick=e=>{const c=e.target.closest('button[data-id]');if(c)openDay(sel,c.dataset.id)};
+$('#fnew').onclick=()=>openDay(sel,'');
 $('#cal').onclick=e=>{const d=e.target.closest('.day[data-d]');if(d)openDay(d.dataset.d)};
 // places dialog
 function renderPlaces(){
