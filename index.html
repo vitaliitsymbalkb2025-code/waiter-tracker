@@ -66,6 +66,11 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .day b{font-size:13px;font-weight:600;display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:12px;align-self:flex-start;margin:-3px 0 0 -3px;padding:0 4px}
 .day.today{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 8px 22px color-mix(in srgb,var(--acc) 28%,transparent)}
 .day.today b{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}
+.day{cursor:pointer}.day.out{cursor:default}
+.shs{margin-top:auto;display:flex;flex-direction:column;gap:3px}
+.sh{display:flex;align-items:center;gap:6px;background:var(--seg-on);border-radius:10px;padding:3px 8px;font-size:12px;box-shadow:inset 3px 0 0 var(--c);transition:transform .12s}
+.sh:hover{transform:translateX(2px);outline:1px solid var(--acc)}
+.sh em{font-style:normal;color:var(--mut);font-size:11px;flex:1}.sh strong{font-weight:700}
 .day .h{font-size:11px;color:var(--mut)}
 .day .m{margin-top:auto;align-self:flex-start;background:var(--seg-on);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700;white-space:nowrap}
 .dots{position:absolute;top:11px;right:10px;display:flex;gap:3px}.dots i{width:7px;height:7px;border-radius:50%}
@@ -99,8 +104,6 @@ h3{margin:0 0 14px;font:700 16px var(--fb);letter-spacing:-.02em}
 .br small{color:var(--mut);font-size:12px}
 .empty{color:var(--mut);padding:18px 0;text-align:center}
 
-.pager{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--cell);border:1px solid var(--cell-bd);border-radius:14px;padding:4px;margin-bottom:14px}
-.pager button{width:34px;height:34px;border:0;border-radius:10px;background:transparent;font-size:18px}.pager button:hover{background:var(--seg-on)}.pager span{font-size:13px;font-weight:600}
 dialog{border:1px solid var(--glass-bd);border-radius:28px;padding:0;background:var(--dlg);-webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);color:var(--ink);width:min(480px,calc(100% - 24px));max-height:92vh;box-shadow:inset 0 1px 0 var(--hi),0 30px 80px rgba(10,15,40,.35)}
 dialog::backdrop{background:rgba(10,14,30,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .dg{padding:24px}.dg h2{margin:0 0 16px;font:700 22px/1.15 var(--fb);letter-spacing:-.03em}
@@ -115,7 +118,7 @@ textarea{resize:vertical;min-height:58px}
 .chip.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}.chip span{flex:1}.chip b{color:var(--wg)}
 .pr{display:grid;grid-template-columns:1fr 84px 70px 38px;gap:6px;margin-bottom:6px;align-items:center}
 @media(max-width:900px){.grid{grid-template-columns:1fr}.sum{position:static}.band{grid-template-columns:1fr}}
-@media(max-width:560px){.wrap{padding:10px 10px 48px}.card{padding:16px;border-radius:24px}.day{min-height:60px;padding:5px;border-radius:12px}.day .h,.dots{display:none}.day .m{font-size:10px;padding:0 5px}.cal{gap:3px}.top{padding:10px 12px}.accs{display:none}.mnav h2{font-size:20px}}
+@media(max-width:560px){.wrap{padding:10px 10px 48px}.card{padding:16px;border-radius:24px}.day{min-height:60px;padding:5px;border-radius:12px}.day .h,.dots,.sh em{display:none}.sh{padding:2px 5px;font-size:10px;justify-content:center;box-shadow:none;border-left:3px solid var(--c)}.day .m{font-size:10px;padding:0 5px}.cal{gap:3px}.top{padding:10px 12px}.accs{display:none}.mnav h2{font-size:20px}}
 </style>
 </head>
 <body>
@@ -164,7 +167,6 @@ textarea{resize:vertical;min-height:58px}
 
 <dialog id="dd"><div class="dg">
   <h2 id="dtitle"></h2>
-  <div id="dlist"></div>
   <div class="f">
     <label class="full">Місце роботи<select id="fp"></select></label>
     <label>Початок<input type="time" id="fs" value="12:00"></label>
@@ -301,8 +303,8 @@ function recHtml(){
   const best=f=>A.reduce((a,b)=>f(b)>f(a)?b:a);
   const bs=best(TOT),bt=best(T),bl=best(s=>+s.sales||0),bd=grp(s=>s.date),bw=grp(s=>iso(monday(s.date))),bm=grp(s=>s.date.slice(0,7));
   const mn=new Date(bm[0]+'-01T00:00').toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
-  const items=[['Найкраща зміна',money(TOT(bs)),fd(bs.date)+' · '+bs.pn,bs.date,1],['Найкращий день',money(bd[1]),fd(bd[0]),bd[0],1],['Найкращий тиждень',money(bw[1]),'з '+fd(bw[0]),'',1],['Найкращий місяць',money(bm[1]),mn,'',1],['Найбільші чайові за зміну',money(T(bt)),fd(bt.date),bt.date,T(bt)],['Найбільший виторг за зміну',money(+bl.sales||0),fd(bl.date),bl.date,+bl.sales||0]];
-  return '<div class="stats">'+items.filter(i=>i[4]>0).map(i=>`<button class="st" data-d="${i[3]}"><span class="lbl">${i[0]}</span><b>${i[1]}</b><span class="lbl">${esc(i[2])}</span></button>`).join('')+'</div>';
+  const items=[['Найкраща зміна',money(TOT(bs)),fd(bs.date)+' · '+bs.pn,bs.date,1,bs.id],['Найкращий день',money(bd[1]),fd(bd[0]),bd[0],1],['Найкращий тиждень',money(bw[1]),'з '+fd(bw[0]),'',1],['Найкращий місяць',money(bm[1]),mn,'',1],['Найбільші чайові за зміну',money(T(bt)),fd(bt.date),bt.date,T(bt),bt.id],['Найбільший виторг за зміну',money(+bl.sales||0),fd(bl.date),bl.date,+bl.sales||0,bl.id]];
+  return '<div class="stats">'+items.filter(i=>i[4]>0).map(i=>`<button class="st" data-d="${i[3]}" data-id="${i[5]||''}"><span class="lbl">${i[0]}</span><b>${i[1]}</b><span class="lbl">${esc(i[2])}</span></button>`).join('')+'</div>';
 }
 let noted='';
 function checkReminder(){
@@ -335,9 +337,9 @@ function render(){
   for(let i=0;i<off;i++)h+='<div class="day out"></div>';
   for(let d=1;d<=n;d++){
     const ds=view.y+'-'+pad(view.m+1)+'-'+pad(d),ss=S.shifts.filter(s=>s.date===ds);
-    const hh=ss.reduce((a,s)=>a+H(s),0),tt=ss.reduce((a,s)=>a+TOT(s),0);
-    h+=`<button class="day${ds===today?' today':''}${ss.length?' has':''}" data-d="${ds}"><b>${d}${ss.some(s=>s.note)?'<span class="nt" title="Є нотатка">✎</span>':''}</b>`+
-      (ss.length?`<span class="dots">${ss.map(s=>`<i style="background:${s.color}"></i>`).join('')}</span><span class="h">${hrs(hh)}</span><span class="m">${nf.format(Math.round(tt))}</span>`:'')+`</button>`;
+    ss.sort((x,y)=>tm(x.start)-tm(y.start));
+    h+=`<div class="day${ds===today?' today':''}${ss.length?' has':''}" data-d="${ds}" role="button" tabindex="0"><b>${d}${ss.some(s=>s.note)?'<span class="nt" title="Є нотатка">✎</span>':''}</b>`+
+      (ss.length?`<span class="shs">${ss.map(s=>`<span class="sh" data-id="${s.id}" style="--c:${s.color}" title="${esc(s.pn)} · ${s.start}–${s.end}"><em>${s.start}</em><strong>${nf.format(Math.round(TOT(s)))}</strong></span>`).join('')}</span>`:'')+`</div>`;
   }
   $('#cal').innerHTML=h;
   // stats
@@ -370,8 +372,7 @@ function openDay(ds,id){
   editing=id||null;
   const d=new Date(ds+'T00:00'),t=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
   $('#dtitle').textContent=t[0].toUpperCase()+t.slice(1);
-  const s=ss.find(x=>x.id===editing),i=ss.indexOf(s);
-  $('#dlist').innerHTML=s&&ss.length>1?`<div class="pager"><button data-id="${ss[(i+ss.length-1)%ss.length].id}" aria-label="Попередня зміна">‹</button><span>Зміна ${i+1} з ${ss.length}</span><button data-id="${ss[(i+1)%ss.length].id}" aria-label="Наступна зміна">›</button></div>`:'';
+  const s=ss.find(x=>x.id===editing);
   placeOpts(s?s.pid:(S.last&&S.places.find(p=>p.id===S.last)?S.last:S.places[0].id));
   $('#fs').value=s?s.start:'12:00';$('#fe').value=s?s.end:'22:00';
   $('#fsl').value=s&&s.sales?s.sales:'';$('#ft').value=s&&s.tips?s.tips:'';$('#fn').value=s?s.note||'':'';
@@ -395,12 +396,18 @@ $('#fsv').onclick=()=>{
 $('#fdel').onclick=function(){
   if(this.textContent==='Видалити'){this.textContent='Точно видалити?';return}
   S.shifts=S.shifts.filter(x=>x.id!==editing);save();
-  S.shifts.some(s=>s.date===sel)?openDay(sel):($('#dd').close(),render());
+  $('#dd').close();render();
 };
 $('#fcl').onclick=()=>$('#dd').close();
-$('#dlist').onclick=e=>{const c=e.target.closest('button[data-id]');if(c)openDay(sel,c.dataset.id)};
 $('#fnew').onclick=()=>openDay(sel,'');
-$('#cal').onclick=e=>{const d=e.target.closest('.day[data-d]');if(d)openDay(d.dataset.d)};
+$('#cal').onclick=e=>{
+  const d=e.target.closest('.day[data-d]');if(!d)return;
+  const ds=d.dataset.d,sh=e.target.closest('.sh');
+  if(sh)return openDay(ds,sh.dataset.id);
+  const n=S.shifts.filter(x=>x.date===ds);
+  openDay(ds,n.length===1?n[0].id:'');
+};
+$('#cal').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('day')){e.preventDefault();e.target.click()}});
 // places dialog
 function renderPlaces(){
   $('#cur').value=S.cur;$('#rmon').value=S.remind&&S.remind.on?'1':'0';$('#rmt').value=(S.remind&&S.remind.time)||'23:00';
@@ -440,7 +447,7 @@ $('#ics').onclick=()=>{
 $('#rmadd').onclick=()=>openDay(iso(new Date()));
 $('#rmno').onclick=()=>{try{localStorage.setItem('waiter-rm-off',iso(new Date()))}catch(e){}checkReminder()};
 setInterval(checkReminder,30000);
-$('#rec').onclick=e=>{const b=e.target.closest('.st');if(b&&b.dataset.d){const d=new Date(b.dataset.d+'T00:00');view={y:d.getFullYear(),m:d.getMonth()};openDay(b.dataset.d)}};
+$('#rec').onclick=e=>{const b=e.target.closest('.st');if(b&&b.dataset.d){const d=new Date(b.dataset.d+'T00:00');view={y:d.getFullYear(),m:d.getMonth()};openDay(b.dataset.d,b.dataset.id||undefined)}};
 // theme
 const TK2='waiter-theme';
 function themeState(){let t={t:'auto',a:'ocean'};try{Object.assign(t,JSON.parse(localStorage.getItem(TK2)||'{}'))}catch(e){}return t}
